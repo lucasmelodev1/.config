@@ -1,0 +1,17 @@
+# Blacklist files/folders in same directory as the .gitignore file
+/**
+
+# Whitelist some files
+!.gitignore
+!/kitty/
+!/kitty/**
+!/nvim/
+!/nvim/**
+!/zellij/
+!/zellij/**
+# !wp-content/
+# wp-content/**
+# !wp-content/themes/
+# wp-content/themes/**
+# !wp-content/plugins/
+# wp-content/plugins/**
