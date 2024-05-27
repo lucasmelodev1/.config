@@ -1,7 +1,7 @@
 // If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
 simplified_ui true
 default_layout "compact"
-theme "catppuccin-mocha"
+theme "rose-pine"
 pane_frames false
 
 keybinds {
@@ -16,6 +16,7 @@ keybinds {
     }
     resize {
         unbind "Ctrl n";
+        bind "Ctrl y" { SwitchToMode "Normal"; }
         // bind "Ctrl n" { SwitchToMode "Normal"; }
         bind "h" "Left" { Resize "Increase Left"; }
         bind "j" "Down" { Resize "Increase Down"; }
