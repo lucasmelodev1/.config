@@ -9,6 +9,7 @@
 !/nvim/**
 !/zellij/
 !/zellij/**
+!starship.toml
 # !wp-content/
 # wp-content/**
 # !wp-content/themes/
