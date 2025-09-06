@@ -1,6 +1,6 @@
 require("nvchad.configs.lspconfig").defaults()
 
-local servers = { "html", "cssls", "gdscript" }
+local servers = { "html", "cssls", "gdscript", "kotlin_lsp", "ts_ls" }
 vim.lsp.enable(servers)
 
 vim.lsp.config("gdscript", {
