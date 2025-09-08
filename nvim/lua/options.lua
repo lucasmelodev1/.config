@@ -13,5 +13,5 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 
--- 80 COLUMN
-vim.opt.colorcolumn = "80"
+-- 100 COLUMN
+vim.opt.colorcolumn = "100"
