@@ -1,41 +1,22 @@
-vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
-vim.g.mapleader = " "
+require("config.lazy")
 
--- bootstrap lazy and all plugins
-local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+-- Recursively require all lua files inside lua/config/
+local function load_configs(dir, prefix)
+  local scan = vim.fn.readdir(dir)
 
-if not vim.uv.fs_stat(lazypath) then
-  local repo = "https://github.com/folke/lazy.nvim.git"
-  vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
+  for _, file in ipairs(scan) do
+    local fullpath = dir .. "/" .. file
+    local stat = vim.loop.fs_stat(fullpath)
+
+    if stat and stat.type == "file" and file:match("%.lua$") then
+      local mod = prefix .. file:gsub("%.lua$", "")
+      require(mod)
+    elseif stat and stat.type == "directory" then
+      load_configs(fullpath, prefix .. file .. ".")
+    end
+  end
 end
 
-vim.opt.rtp:prepend(lazypath)
+local config_path = vim.fn.stdpath("config") .. "/lua/config"
+load_configs(config_path, "config.")
 
-local lazy_config = require "configs.lazy"
-
--- load plugins
-require("lazy").setup({
-  {
-    "NvChad/NvChad",
-    lazy = false,
-    branch = "v2.5",
-    import = "nvchad.plugins",
-  },
-
-  { import = "plugins" },
-}, lazy_config)
-
--- load theme
-dofile(vim.g.base46_cache .. "defaults")
-dofile(vim.g.base46_cache .. "statusline")
-
-require "options"
-require "autocmds"
-
-vim.schedule(function()
-  require "mappings"
-end)
-
-vim.o.termguicolors = true
-vim.opt.number = true
-vim.opt.relativenumber = true
