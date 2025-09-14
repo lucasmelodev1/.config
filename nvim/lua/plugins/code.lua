@@ -3,6 +3,22 @@ return {
     { 'williamboman/mason.nvim' },
     { "nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate" },
 
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+
+    -- dap
+    { 'mfussenegger/nvim-dap' },
+    { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, opts = {} },
+    { 'theHamsta/nvim-dap-virtual-text', dependencies = { "mfussenegger/nvim-dap" }, opts = {} },
+    { 'leoluz/nvim-dap-go', opts = {} },
+
     -- nvim-cmp
     { "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-nvim-lsp" },
