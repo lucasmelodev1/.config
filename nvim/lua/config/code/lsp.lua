@@ -40,9 +40,12 @@ vim.diagnostic.config({
 })
 
 -- Show diagnostics in a floating window
-vim.keymap.set("n", "<leader>ld", function()
+vim.keymap.set("n", "ge", function()
     vim.diagnostic.open_float(nil, { focus = false, border = "rounded" })
 end, { desc = "Show diagnostics" })
 
 -- Rename symbol under cursor
-vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP: Rename" })
+vim.keymap.set("n", "gr", vim.lsp.buf.rename, { desc = "LSP: Rename" })
+
+-- Go to definition
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "LSP: Go to definition" })
