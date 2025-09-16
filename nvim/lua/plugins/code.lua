@@ -1,7 +1,18 @@
 return {
-    { 'neovim/nvim-lspconfig' },
-    { 'williamboman/mason.nvim' },
-    { "nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate" },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        branch = 'master',
+        lazy = false,
+        build = ":TSUpdate"
+    },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {},
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
+    },
 
     {
         "folke/lazydev.nvim",
@@ -15,9 +26,9 @@ return {
 
     -- dap
     { 'mfussenegger/nvim-dap' },
-    { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, opts = {} },
-    { 'theHamsta/nvim-dap-virtual-text', dependencies = { "mfussenegger/nvim-dap" }, opts = {} },
-    { 'leoluz/nvim-dap-go', opts = {} },
+    { "rcarriga/nvim-dap-ui",            dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, opts = {} },
+    { 'theHamsta/nvim-dap-virtual-text', dependencies = { "mfussenegger/nvim-dap" },                          opts = {} },
+    { 'leoluz/nvim-dap-go',              opts = {} },
 
     -- nvim-cmp
     { "hrsh7th/nvim-cmp" },

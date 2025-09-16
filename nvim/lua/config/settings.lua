@@ -11,3 +11,10 @@ vim.opt.relativenumber = true -- Show relative numbers on other lines
 -- Padding
 vim.opt.signcolumn = "yes"
 vim.opt.numberwidth = 4
+
+-- Show a vertical line at column 100
+vim.opt.colorcolumn = "100"
+vim.cmd("highlight ColorColumn guibg=#2c2c2c ctermbg=236")
+
+-- At least 8 lines will be shown below the cursor
+vim.opt.scrolloff = 8
