@@ -5,15 +5,8 @@ return {
         lazy = false,
         build = ":TSUpdate"
     },
-    {
-        "mason-org/mason-lspconfig.nvim",
-        opts = {},
-        dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
-            "neovim/nvim-lspconfig",
-        },
-    },
-
+    { "mason-org/mason.nvim", opts = {} },
+    { "neovim/nvim-lspconfig" },
     {
         "folke/lazydev.nvim",
         ft = "lua",

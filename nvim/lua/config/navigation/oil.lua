@@ -6,7 +6,7 @@ oil.setup({
     },
 })
 
-vim.keymap.set('n', '-', function()
+vim.keymap.set('n', '<leader>a', function()
     oil.open()
     vim.wait(1000, function()
         return oil.get_cursor_entry() ~= nil
@@ -15,4 +15,3 @@ vim.keymap.set('n', '-', function()
         oil.open_preview({ vertical = true, split = "belowright" })
     end
 end)
-
