@@ -5,9 +5,15 @@ i# Ignore everything
 !.gitignore
 !wezterm/
 !wezterm/**
-!allacritty/
-!allacritty/**
 !nvim/
 !nvim/**
 !tmux/
 !tmux/**
+!fish/
+!fish/**
+!hypr/
+!hypr/**
+!rofi/
+!rofi/**
+!keyd/
+!keyd/**

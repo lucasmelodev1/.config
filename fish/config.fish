@@ -22,3 +22,5 @@ end
 set -Ux PATH $HOME/go/bin $PATH
 
 set fish_greeting
+
+fish_config theme choose Catppuccin\ Mocha
