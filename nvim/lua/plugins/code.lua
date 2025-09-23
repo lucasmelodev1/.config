@@ -1,9 +1,9 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        branch = 'master',
+        branch = 'main',
         lazy = false,
-        build = ":TSUpdate"
+        build = ":TSUpdate",
     },
     { "mason-org/mason.nvim", opts = {} },
     { "neovim/nvim-lspconfig" },

@@ -17,3 +17,7 @@ i# Ignore everything
 !rofi/**
 !keyd/
 !keyd/**
+!omarchy/
+!omarchy/**
+!ghostty/
+!ghostty/**

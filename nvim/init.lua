@@ -31,3 +31,8 @@ end
 local config_path = vim.fn.stdpath("config") .. "/lua/config"
 load_configs(config_path, "config.")
 format_on_save()
+
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = '*',
+    callback = function() pcall(vim.treesitter.start) end,
+})

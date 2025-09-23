@@ -1,14 +1,7 @@
-local treesitter = require('nvim-treesitter.configs')
+local treesitter = require('nvim-treesitter')
+
 treesitter.setup {
-    ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
-
-    sync_install = false,
-
-    auto_install = true,
-
-    highlight = {
-        enable = true,
-
-        additional_vim_regex_highlighting = false,
-    },
+    install_dir = vim.fn.stdpath('data') .. '/site'
 }
+
+treesitter.install { 'rust', 'javascript', 'go', 'gdscript' }
