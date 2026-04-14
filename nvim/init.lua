@@ -44,29 +44,33 @@ end })
 
 -- Plugins
 vim.pack.add({
-    "https://github.com/ibhagwan/fzf-lua",
+    "https://github.com/mofiqul/vscode.nvim",
     "https://github.com/projekt0n/github-nvim-theme",
+    "https://github.com/ibhagwan/fzf-lua",
 	{
 	  src = 'https://github.com/Saghen/blink.cmp',
 	  name = 'blink.cmp',
 	  version = vim.version.range('1.x')
   	},
 	"https://github.com/neovim/nvim-lspconfig",
-    "https://github.com/nvim-treesitter/nvim-treesitter"
+    "https://github.com/nvim-treesitter/nvim-treesitter",
+    "https://github.com/Aietes/esp32.nvim",
 })
 
+require("esp32").setup()
+
 -- Treesitter
-require('nvim-treesitter').install { 'go', 'typescript', 'jsx', 'tsx' }
+require('nvim-treesitter').install { 'go', 'typescript', 'jsx', 'tsx', 'rust', 'c' }
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'go', 'ts', 'js', 'tsx', 'jsx' }, -- Change to add new filetypes supported by treesitter
+  pattern = { 'go', 'ts', 'js', 'tsx', 'jsx', 'rs', 'c' }, -- Change to add new filetypes supported by treesitter
   callback = function() vim.treesitter.start() end,
 })
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" -- Indentation
 
 -- Colorscheme
-vim.cmd('colorscheme github_dark_default')
+vim.cmd('colorscheme github_dark_dimmed')
 
 -- Fuzzy Find
 local fzf = require("fzf-lua")
@@ -77,12 +81,17 @@ fzf.setup({
         file_icons = false,
         color_icons = false,
     },
+    files = {
+        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache",
+    },
 })
 
 vim.keymap.set("n", "<leader>s", fzf.files) -- go to files
+vim.keymap.set("n", "<leader>g", fzf.live_grep) -- go to files
 fzf.register_ui_select() -- makes lsp bindings use fzf-lua ui
 vim.keymap.set('n', 'grr', fzf.lsp_references) -- makes the find references use fzf-lua ui, since 
                                                -- the .register_ui_select() command does not work on it
+vim.keymap.set({'v', 'n'}, '<leader>ca', vim.lsp.buf.code_action)
 
 -- Autocomplete
 require("blink.cmp").setup()
@@ -97,6 +106,8 @@ vim.lsp.enable({
     'gopls',
     'ts_ls',
     'biome',
+    'rust_analyzer',
+    'clangd',
 })
 
 -- LSP show diagnostics bubble when navigating to it

@@ -1,0 +1,6 @@
+theme = GitHub Dark Dimmed
+font-family = Monaspace Neon Regular
+fullscreen = true
+font-size = 13
+adjust-cell-height = 20%
+window-show-tab-bar = never
