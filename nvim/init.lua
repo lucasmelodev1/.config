@@ -26,6 +26,7 @@ vim.opt.scrolloff = 10 -- Keep 10 lines above/below cursor when scrolling
 vim.opt.updatetime = 250
 
 -- QOL
+vim.opt.colorcolumn = "120"
 vim.opt.undofile = true -- Save undo history in file
 vim.opt.inccommand = "split" -- Shows a live preview of :%s/find/replace/ in a small split window as you type it.
 vim.opt.clipboard = "unnamedplus" -- Sync clipboard
@@ -44,8 +45,7 @@ end })
 
 -- Plugins
 vim.pack.add({
-    "https://github.com/mofiqul/vscode.nvim",
-    "https://github.com/projekt0n/github-nvim-theme",
+    "https://github.com/Mofiqul/adwaita.nvim",
     "https://github.com/ibhagwan/fzf-lua",
 	{
 	  src = 'https://github.com/Saghen/blink.cmp',
@@ -60,17 +60,17 @@ vim.pack.add({
 require("esp32").setup()
 
 -- Treesitter
-require('nvim-treesitter').install { 'go', 'typescript', 'jsx', 'tsx', 'rust', 'c' }
+require('nvim-treesitter').install { 'go', 'typescript', 'jsx', 'tsx', 'rust', 'c', 'cpp' }
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'go', 'ts', 'js', 'tsx', 'jsx', 'rs', 'c' }, -- Change to add new filetypes supported by treesitter
+  pattern = { 'go', 'ts', 'js', 'tsx', 'jsx', 'rs', 'c', 'cpp' }, -- Change to add new filetypes supported by treesitter
   callback = function() vim.treesitter.start() end,
 })
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" -- Indentation
 
 -- Colorscheme
-vim.cmd('colorscheme github_dark_dimmed')
+vim.cmd('colorscheme adwaita')
 
 -- Fuzzy Find
 local fzf = require("fzf-lua")
@@ -82,7 +82,7 @@ fzf.setup({
         color_icons = false,
     },
     files = {
-        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache",
+        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache --exclude target",
     },
 })
 
@@ -99,6 +99,12 @@ require("blink.cmp").setup()
 -- LSP
 vim.lsp.config('*', {
   capabilities = require('blink.cmp').get_lsp_capabilities()
+})
+
+vim.lsp.config('clangd', {
+    init_options = {
+        fallbackFlags = { '-std=c++20' }
+    },
 })
 
 vim.lsp.enable({
