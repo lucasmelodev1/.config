@@ -91,6 +91,8 @@ vim.keymap.set("n", "<leader>g", fzf.live_grep) -- go to files
 fzf.register_ui_select() -- makes lsp bindings use fzf-lua ui
 vim.keymap.set('n', 'grr', fzf.lsp_references) -- makes the find references use fzf-lua ui, since 
                                                -- the .register_ui_select() command does not work on it
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+vim.keymap.set('n', 'gD', vim.lsp.buf.declaration)
 vim.keymap.set({'v', 'n'}, '<leader>ca', vim.lsp.buf.code_action)
 
 -- Autocomplete
@@ -103,7 +105,7 @@ vim.lsp.config('*', {
 
 vim.lsp.config('clangd', {
     init_options = {
-        fallbackFlags = { '-std=c++20' }
+        fallbackFlags = { '-std=c23' }
     },
 })
 

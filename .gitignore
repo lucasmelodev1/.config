@@ -6,4 +6,7 @@
 !ghostty/
 !ghostty/**
 
+!fonts/
+!fonts/**
+
 !.gitignore
