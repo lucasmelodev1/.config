@@ -45,7 +45,7 @@ end })
 
 -- Plugins
 vim.pack.add({
-    "https://github.com/Mofiqul/adwaita.nvim",
+    "https://github.com/rebelot/kanagawa.nvim",
     "https://github.com/ibhagwan/fzf-lua",
 	{
 	  src = 'https://github.com/Saghen/blink.cmp',
@@ -57,20 +57,66 @@ vim.pack.add({
     "https://github.com/Aietes/esp32.nvim",
 })
 
+-- Colorscheme
+require('kanagawa').setup({
+    colors = {
+        theme = {
+            all = {
+                ui = {
+                    bg_gutter = "none"
+                }
+            }
+        }
+    }
+})
+vim.cmd.colorscheme('kanagawa')
+
 require("esp32").setup()
 
 -- Treesitter
-require('nvim-treesitter').install { 'go', 'typescript', 'jsx', 'tsx', 'rust', 'c', 'cpp' }
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'go', 'ts', 'js', 'tsx', 'jsx', 'rs', 'c', 'cpp' }, -- Change to add new filetypes supported by treesitter
-  callback = function() vim.treesitter.start() end,
+require('nvim-treesitter').setup({
+  ensure_installed = { 
+    'c', 
+    'cpp',
+    'go', 
+    'rust', 
+    'lua', 
+    'typescript',
+    'tsx',
+    'javascript',
+    'jsx'
+  },
+  
+  auto_install = true,
+  
+  highlight = {
+    enable = true,
+    -- Disable for large files for performance
+    disable = function(lang, buf)
+      local max_filesize = 100 * 1024 -- 100 KB
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then
+        return true
+      end
+    end,
+  },
+  
+  indent = {
+    enable = true,
+  },
+  
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = '<CR>',
+      node_incremental = '<CR>',
+      scope_incremental = '<TAB>',
+      node_decremental = '<BS>',
+    },
+  },
 })
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" -- Indentation
-
--- Colorscheme
-vim.cmd('colorscheme adwaita')
 
 -- Fuzzy Find
 local fzf = require("fzf-lua")
@@ -103,11 +149,11 @@ vim.lsp.config('*', {
   capabilities = require('blink.cmp').get_lsp_capabilities()
 })
 
-vim.lsp.config('clangd', {
-    init_options = {
-        fallbackFlags = { '-std=c23' }
-    },
-})
+-- vim.lsp.config('clangd', {
+--     init_options = {
+--         fallbackFlags = { '-std=c++23' }
+--     },
+-- })
 
 vim.lsp.enable({
     'lua_ls',

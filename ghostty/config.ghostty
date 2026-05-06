@@ -1,8 +1,8 @@
-theme = Adwaita Dark
+theme = Kanagawa Wave
 font-family = CommitMono-w1cache
 fullscreen = true
 font-size = 16
-adjust-cell-height = 25%
+adjust-cell-height = 50%
 window-show-tab-bar = never
 window-padding-x = 10
 window-padding-y = 10
