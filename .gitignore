@@ -9,4 +9,7 @@
 !fonts/
 !fonts/**
 
+!bash/
+!bash/**
+
 !.gitignore

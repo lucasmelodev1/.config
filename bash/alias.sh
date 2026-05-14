@@ -1,0 +1,1 @@
+alias nvim=$HOME/executables/nvim-linux-x86_64.appimage

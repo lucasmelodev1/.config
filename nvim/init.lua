@@ -55,7 +55,18 @@ vim.pack.add({
 	"https://github.com/neovim/nvim-lspconfig",
     "https://github.com/nvim-treesitter/nvim-treesitter",
     "https://github.com/Aietes/esp32.nvim",
+
+    -- Java support
+    {
+        src = 'https://github.com/JavaHello/spring-boot.nvim',
+        version = '218c0c26c14d99feca778e4d13f5ec3e8b1b60f0',
+    },
+    'https://github.com/MunifTanjim/nui.nvim',
+    'https://github.com/mfussenegger/nvim-dap',
+    "https://github.com/nvim-java/nvim-java",
 })
+
+require('java').setup()
 
 -- Colorscheme
 require('kanagawa').setup({
@@ -84,7 +95,9 @@ require('nvim-treesitter').setup({
     'typescript',
     'tsx',
     'javascript',
-    'jsx'
+    'jsx',
+    'python',
+    'java',
   },
   
   auto_install = true,
@@ -140,6 +153,7 @@ vim.keymap.set('n', 'grr', fzf.lsp_references) -- makes the find references use 
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
 vim.keymap.set('n', 'gD', vim.lsp.buf.declaration)
 vim.keymap.set({'v', 'n'}, '<leader>ca', vim.lsp.buf.code_action)
+vim.keymap.set("i", "<M-BS>", "<C-W>", { noremap = true, silent = true })
 
 -- Autocomplete
 require("blink.cmp").setup()
@@ -162,6 +176,8 @@ vim.lsp.enable({
     'biome',
     'rust_analyzer',
     'clangd',
+    'pyright',
+    'jdtls',
 })
 
 -- LSP show diagnostics bubble when navigating to it
