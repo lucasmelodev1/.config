@@ -1,10 +1,12 @@
+vim.cmd.colorscheme('catppuccin')
+
 -- Preferences
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Tabs & Indentation
-vim.opt.tabstop = 4 -- Number of spaces a tab counts for
-vim.opt.shiftwidth = 4 -- Number of spaces for auto-indent
+vim.opt.tabstop = 2 -- Number of spaces a tab counts for
+vim.opt.shiftwidth = 2 -- Number of spaces for auto-indent
 vim.opt.expandtab = true -- Convert tabs to spaces
 vim.opt.smartindent = true -- Insert indents automatically
 
@@ -45,7 +47,6 @@ end })
 
 -- Plugins
 vim.pack.add({
-    "https://github.com/rebelot/kanagawa.nvim",
     "https://github.com/ibhagwan/fzf-lua",
 	{
 	  src = 'https://github.com/Saghen/blink.cmp',
@@ -64,25 +65,21 @@ vim.pack.add({
     'https://github.com/MunifTanjim/nui.nvim',
     'https://github.com/mfussenegger/nvim-dap',
     "https://github.com/nvim-java/nvim-java",
+
+    -- Flutter support
+    "https://github.com/nvim-flutter/flutter-tools.nvim",
+    "https://github.com/nvim-lua/plenary.nvim"
 })
 
 require('java').setup()
-
--- Colorscheme
-require('kanagawa').setup({
-    colors = {
-        theme = {
-            all = {
-                ui = {
-                    bg_gutter = "none"
-                }
-            }
-        }
-    }
-})
-vim.cmd.colorscheme('kanagawa')
-
 require("esp32").setup()
+require("flutter-tools").setup()
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(ev)
+    vim.lsp.document_color.enable(true, { bufnr = ev.buf })
+  end,
+})
 
 -- Treesitter
 require('nvim-treesitter').setup({
@@ -141,7 +138,7 @@ fzf.setup({
         color_icons = false,
     },
     files = {
-        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache --exclude target",
+        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache --exclude target --exclude .dart_tool",
     },
 })
 
@@ -199,3 +196,14 @@ vim.keymap.set("n", "<leader>w", function()
 
   vim.cmd("write")
 end, { desc = "LSP Format and Save" })
+
+-- Format on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function()
+    -- Format with a small delay to avoid blocking save
+    vim.defer_fn(function()
+      vim.lsp.buf.format()
+    end, 0)
+  end,
+})
