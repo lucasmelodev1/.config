@@ -12,4 +12,7 @@
 !bash/
 !bash/**
 
+!zed/
+!zed/**
+
 !.gitignore

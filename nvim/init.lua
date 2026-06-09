@@ -138,7 +138,7 @@ fzf.setup({
         color_icons = false,
     },
     files = {
-        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache --exclude target --exclude .dart_tool",
+        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache --exclude target --exclude .dart_tool --exclude .idea --exclude .vscode",
     },
 })
 

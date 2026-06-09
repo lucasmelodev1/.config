@@ -1,0 +1,85 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "icon_theme": "Colored Zed Icons Theme Dark",
+  "agent_buffer_font_size": 18.0,
+  "agent_ui_font_size": 18.0,
+  "terminal": {
+    "font_family": "CommitMono-w1cache",
+    "toolbar": {
+      "breadcrumbs": false
+    },
+    "option_as_meta": false
+  },
+  "outline_panel": {
+    "button": true
+  },
+  "status_bar": {
+    "active_language_button": true
+  },
+  "project_panel": {
+    "hide_root": false,
+    "diagnostic_badges": false,
+    "bold_folder_labels": false,
+    "indent_size": 20.0,
+    "file_icons": true,
+    "entry_spacing": "comfortable",
+    "default_width": 240.0,
+    "dock": "left",
+    "button": true
+  },
+  "prettier": {
+    "allowed": false
+  },
+  "vim": {
+    "gdefault": true,
+    "use_smartcase_find": true,
+    "toggle_relative_line_numbers": true
+  },
+  "scrollbar": {
+    "show": "auto"
+  },
+  "gutter": {
+    "min_line_number_digits": 4
+  },
+  "which_key": {
+    "enabled": true
+  },
+  "ui_font_family": "CommitMono-w1cache",
+  "buffer_font_weight": 400.0,
+  "buffer_font_family": "CommitMono-w1cache",
+  "redact_private_values": false,
+  "agent": {
+    "dock": "right",
+    "default_model": {
+      "provider": "openai-subscribed",
+      "model": "gpt-5.5",
+      "enable_thinking": true,
+      "effort": "medium"
+    },
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "session": {
+    "trust_all_worktrees": false
+  },
+  "vim_mode": true,
+  "agent_servers": {
+    "codex-acp": {
+      "type": "registry"
+    }
+  },
+  "ui_font_size": 18.0,
+  "buffer_font_size": 20.0,
+  "theme": {
+    "mode": "dark",
+    "light": "Gruvbox Light Hard",
+    "dark": "Fleet Dark"
+  },
+}
