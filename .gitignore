@@ -9,10 +9,12 @@
 !fonts/
 !fonts/**
 
-!bash/
-!bash/**
+!zsh/
+!zsh/**
 
-!zed/
-!zed/**
+!tmux/
+!tmux/**
+
+!starship.toml
 
 !.gitignore

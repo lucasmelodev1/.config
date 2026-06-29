@@ -1,209 +1,123 @@
-vim.cmd.colorscheme('catppuccin')
+-- ┌────────────────────┐
+-- │ Welcome to MiniMax │
+-- └────────────────────┘
+--
+-- This is a config designed to mostly use MINI. It provides out of the box
+-- a stable, polished, and feature rich Neovim experience. Its structure:
+--
+-- ├ init.lua          Initial (this) file executed during startup
+-- ├ plugin/           Files automatically sourced during startup
+-- ├── 10_options.lua  Built-in Neovim behavior
+-- ├── 20_keymaps.lua  Custom mappings
+-- ├── 30_mini.lua     MINI configuration
+-- ├── 40_plugins.lua  Plugins outside of MINI
+-- ├ snippets/         User defined snippets (has demo file)
+-- ├ after/            Files to override behavior added by plugins
+-- ├── ftplugin/       Files for filetype behavior (has demo file)
+-- ├── lsp/            Language server configurations (has demo file)
+-- ├── snippets/       Higher priority snippet files (has demo file)
+--
+-- Config files are meant to be read, preferably inside a Neovim instance running
+-- this config and opened at its root. This will help you better understand your
+-- setup. Start with this file. Any order is possible, prefer the one listed above.
+-- Ways of navigating your config:
+-- - `<Space>` + `e` + (one of) `iokmp` - edit 'init.lua' or 'plugin/' files.
+-- - Inside config directory: `<Space>ff` (picker) or `<Space>ed` (explorer)
+-- - Navigate existing buffers with `[b`, `]b`, or `<Space>fb`.
+--
+-- Config files are also meant to be customized. Initially it is a baseline of
+-- a working config based on MINI. Modify it to make it yours. Some approaches:
+-- - Modify already existing files in a way that keeps them consistent.
+-- - Add new files in a way that keeps config consistent.
+--   Usually inside 'plugin/' or 'after/'.
+--
+-- Documentation comments like this can be found throughout the config.
+-- Common conventions:
+--
+-- - See `:h key-notation` for key notation used.
+-- - `:h xxx` means "documentation of helptag xxx". Either type text directly
+--   followed by Enter or type `<Space>fh` to open a helptag fuzzy picker.
+-- - "Type `<Space>fh`" means "press <Space>, followed by f, followed by h".
+--   Unless said otherwise, it assumes that Normal mode is current.
+-- - "See 'path/to/file'" means see open file at described path and read it.
+-- - `:SomeCommand ...` or `:lua ...` means execute mentioned command.
 
--- Preferences
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+-- ┌────────────────┐
+-- │ Plugin manager │
+-- └────────────────┘
+--
+-- This config uses `vim.pack` - built-in plugin manager. Its main entry
+-- point is a `vim.pack.add()` function, which acts like a "smarter `:packadd`":
+-- load plugin after making sure it is installed from source. The state of
+-- installed plugins is recorded in the lockfile named 'nvim-pack-lock.json'.
+-- Example usage:
+-- - `vim.pack.add({ ... })` - use inside config to add one or more plugins.
+-- - `:lua vim.pack.update()` - update all plugins; execute `:write` to confirm.
+-- - `:lua vim.pack.del({ ... })` - delete specific plugins.
+--
+-- See also:
+-- - `:h vim.pack-examples` - how to use it
+-- - `:h vim.pack-lockfile` - lockfile info
+-- - `:h vim.pack-events` - available events and plugin hooks examples
+-- - `:h vim.pack.update()` - more details about confirmation step
 
--- Tabs & Indentation
-vim.opt.tabstop = 2 -- Number of spaces a tab counts for
-vim.opt.shiftwidth = 2 -- Number of spaces for auto-indent
-vim.opt.expandtab = true -- Convert tabs to spaces
-vim.opt.smartindent = true -- Insert indents automatically
+-- Define config table to be able to pass data between scripts
+-- It is a global variable which can be use both as `_G.Config` and `Config`
+_G.Config = {}
 
--- Line Numbers
-vim.opt.number = true -- Show line numbers
-vim.opt.relativenumber = true -- Turn on relative numbers
-vim.opt.signcolumn = "yes" -- Always show the sign column (for LSP)
-vim.opt.numberwidth = 4 -- Set a minimum width for the number column
+-- Define custom autocommand group and helper to create an autocommand.
+-- Autocommands are Neovim's way to define actions that are executed on events
+-- (like creating a buffer, setting an option, etc.).
+--
+-- See also:
+-- - `:h autocommand`
+-- - `:h nvim_create_augroup()`
+-- - `:h nvim_create_autocmd()`
+local gr = vim.api.nvim_create_augroup('custom-config', {})
+Config.new_autocmd = function(event, pattern, callback, desc)
+  local opts = { group = gr, pattern = pattern, callback = callback, desc = desc }
+  vim.api.nvim_create_autocmd(event, opts)
+end
 
--- Search Behavior
-vim.opt.ignorecase = true -- Ignore case in search patterns
-vim.opt.smartcase = true -- ...unless the search has a capital letter
-vim.opt.hlsearch = false -- Don't keep previous search highlighted
-
--- UI Polish
-vim.opt.cursorline = true -- Highlight the line the cursor is on
-vim.opt.termguicolors = true  -- Enable 24-bit RGB colors
-vim.opt.scrolloff = 10 -- Keep 10 lines above/below cursor when scrolling
-vim.opt.updatetime = 250
-
--- QOL
-vim.opt.colorcolumn = "120"
-vim.opt.undofile = true -- Save undo history in file
-vim.opt.inccommand = "split" -- Shows a live preview of :%s/find/replace/ in a small split window as you type it.
-vim.opt.clipboard = "unnamedplus" -- Sync clipboard
-
--- File editor
-vim.keymap.set("n", "<leader>e", ":Ex<CR>")
-
--- Treesitter auto update
-vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
-  local name, kind = ev.data.spec.name, ev.data.kind
-  if name == 'nvim-treesitter' and kind == 'update' then
-    if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
-    vim.cmd('TSUpdate')
+-- Define custom `vim.pack.add()` hook helper. Plugin data is passed as
+-- argument to the callback. See `:h vim.pack-events`.
+-- Example usage: see 'plugin/40_plugins.lua'.
+-- If any plugin requires installation hooks, add them after this function
+-- and before the first `vim.pack.add()` call.
+Config.on_packchanged = function(plugin_name, kinds, callback, desc)
+  local f = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if not (name == plugin_name and vim.tbl_contains(kinds, kind)) then return end
+    if not ev.data.active then vim.cmd.packadd(plugin_name) end
+    callback(ev.data)
   end
-end })
+  Config.new_autocmd('PackChanged', '*', f, desc)
+end
 
--- Plugins
-vim.pack.add({
-    "https://github.com/ibhagwan/fzf-lua",
-	{
-	  src = 'https://github.com/Saghen/blink.cmp',
-	  name = 'blink.cmp',
-	  version = vim.version.range('1.x')
-  	},
-	"https://github.com/neovim/nvim-lspconfig",
-    "https://github.com/nvim-treesitter/nvim-treesitter",
-    "https://github.com/Aietes/esp32.nvim",
+-- 'mini.nvim' - all-in-one plugin powering most MiniMax features.
+-- See 'plugin/30_mini.lua' for how it is used.
+-- Load now to have 'mini.misc' available for custom loading helpers.
+vim.pack.add({ 'https://github.com/nvim-mini/mini.nvim' })
 
-    -- Java support
-    {
-        src = 'https://github.com/JavaHello/spring-boot.nvim',
-        version = '218c0c26c14d99feca778e4d13f5ec3e8b1b60f0',
-    },
-    'https://github.com/MunifTanjim/nui.nvim',
-    'https://github.com/mfussenegger/nvim-dap',
-    "https://github.com/nvim-java/nvim-java",
-
-    -- Flutter support
-    "https://github.com/nvim-flutter/flutter-tools.nvim",
-    "https://github.com/nvim-lua/plenary.nvim"
-})
-
-require('java').setup()
-require("esp32").setup()
-require("flutter-tools").setup()
-
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(ev)
-    vim.lsp.document_color.enable(true, { bufnr = ev.buf })
-  end,
-})
-
--- Treesitter
-require('nvim-treesitter').setup({
-  ensure_installed = { 
-    'c', 
-    'cpp',
-    'go', 
-    'rust', 
-    'lua', 
-    'typescript',
-    'tsx',
-    'javascript',
-    'jsx',
-    'python',
-    'java',
-  },
-  
-  auto_install = true,
-  
-  highlight = {
-    enable = true,
-    -- Disable for large files for performance
-    disable = function(lang, buf)
-      local max_filesize = 100 * 1024 -- 100 KB
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > max_filesize then
-        return true
-      end
-    end,
-  },
-  
-  indent = {
-    enable = true,
-  },
-  
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = '<CR>',
-      node_incremental = '<CR>',
-      scope_incremental = '<TAB>',
-      node_decremental = '<BS>',
-    },
-  },
-})
-
-vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" -- Indentation
-
--- Fuzzy Find
-local fzf = require("fzf-lua")
-fzf.setup({
-    {"ivy", "borderless"},
-    defaults = {
-        git_icons = false,
-        file_icons = false,
-        color_icons = false,
-    },
-    files = {
-        cmd = "fd --type f --hidden --exclude .git --exclude build --exclude managed_components --exclude build.clang --exclude .cache --exclude target --exclude .dart_tool --exclude .idea --exclude .vscode",
-    },
-})
-
-vim.keymap.set("n", "<leader>s", fzf.files) -- go to files
-vim.keymap.set("n", "<leader>g", fzf.live_grep) -- go to files
-fzf.register_ui_select() -- makes lsp bindings use fzf-lua ui
-vim.keymap.set('n', 'grr', fzf.lsp_references) -- makes the find references use fzf-lua ui, since 
-                                               -- the .register_ui_select() command does not work on it
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
-vim.keymap.set('n', 'gD', vim.lsp.buf.declaration)
-vim.keymap.set({'v', 'n'}, '<leader>ca', vim.lsp.buf.code_action)
-vim.keymap.set("i", "<M-BS>", "<C-W>", { noremap = true, silent = true })
-
--- Autocomplete
-require("blink.cmp").setup()
-
--- LSP
-vim.lsp.config('*', {
-  capabilities = require('blink.cmp').get_lsp_capabilities()
-})
-
--- vim.lsp.config('clangd', {
---     init_options = {
---         fallbackFlags = { '-std=c++23' }
---     },
--- })
-
-vim.lsp.enable({
-    'lua_ls',
-    'gopls',
-    'ts_ls',
-    'biome',
-    'rust_analyzer',
-    'clangd',
-    'pyright',
-    'jdtls',
-})
-
--- LSP show diagnostics bubble when navigating to it
-vim.keymap.set("n", "]d", function()
-  vim.diagnostic.goto_next({ float = true })
-end, { desc = "Go to next diagnostic" })
-
-vim.keymap.set("n", "[d", function()
-  vim.diagnostic.goto_prev({ float = true })
-end, { desc = "Go to previous diagnostic" })
-
--- LSP format
-vim.keymap.set("n", "<leader>w", function()
-  -- 1. Format th buffer using Biome
-  vim.lsp.buf.format({
-    async = false,
-    timeout_ms = 1000,
-  })
-
-  vim.cmd("write")
-end, { desc = "LSP Format and Save" })
-
--- Format on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*",
-  callback = function()
-    -- Format with a small delay to avoid blocking save
-    vim.defer_fn(function()
-      vim.lsp.buf.format()
-    end, 0)
-  end,
-})
+-- Loading helpers used to organize config into fail-safe parts. Example usage:
+-- - `now` - execute immediately. Use for what must be executed during startup.
+--   Like colorscheme, statusline, tabline, dashboard, etc.
+-- - `later` - execute a bit later. Use for things not needed during startup.
+-- - `now_if_args` - use only if needed during startup when Neovim is started
+--   like `nvim -- path/to/file`, but otherwise delaying is fine.
+-- - Others are better used only if the above is not enough for good performance.
+--   Use only if you are comfortable with adding complexity to your config:
+--   - `on_event` - execute once on a first matched event. Like "delay until
+--     first Insert mode enter": `on_event('InsertEnter', function() ... end)`.
+--   - `on_filetype` - execute once on a first matched filetype. Like "delay
+--     until first Lua file": `on_filetype('lua', function() ... end)`.
+--
+-- See also:
+-- - `:h MiniMisc.safely()`
+-- - 'plugin/30_mini.lua' and 'plugin/40_plugins.lua'
+local misc = require('mini.misc')
+Config.now = function(f) misc.safely('now', f) end
+Config.later = function(f) misc.safely('later', f) end
+Config.now_if_args = vim.fn.argc(-1) > 0 and Config.now or Config.later
+Config.on_event = function(ev, f) misc.safely('event:' .. ev, f) end
+Config.on_filetype = function(ft, f) misc.safely('filetype:' .. ft, f) end
