@@ -187,10 +187,11 @@ later(function() add({ 'https://github.com/rafamadriz/friendly-snippets' }) end)
 --    'https://github.com/ellisonleao/gruvbox.nvim',
 --  })
 add({
-  'https://github.com/folke/tokyonight.nvim'
+  -- 'https://github.com/folke/tokyonight.nvim',
+  'https://github.com/mofiqul/vscode.nvim'
 })
 now_if_args(function() 
-  require('tokyonight').setup()
+  -- require('tokyonight').setup()
 end)
 --
 --   -- Enable only one
@@ -199,4 +200,9 @@ end)
 
 now_if_args(function() 
   add({'https://github.com/christoomey/vim-tmux-navigator'})
+  add({
+    'https://github.com/tpope/vim-dadbod',
+    'https://github.com/kristijanhusak/vim-dadbod-ui',
+    'https://github.com/kristijanhusak/vim-dadbod-completion'
+  })
 end)

@@ -130,3 +130,33 @@ local diagnostic_opts = {
 -- Use `later()` to avoid sourcing `vim.diagnostic` on startup
 Config.later(function() vim.diagnostic.config(diagnostic_opts) end)
 -- stylua: ignore end
+
+vim.g.db_ui_use_nerd_fonts = 1
+-- Set up filetype-based loading for completion
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "sql", "mysql", "plsql" },
+  callback = function()
+    require("cmp").setup.buffer({ sources = { { name = "vim-dadbod-completion" } } })
+  end,
+})
+
+-- Inserts java package name when creating a new java file
+local function insert_java_package()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  local package_path = filepath:match("src/main/java/(.+)/[^/]+%.java$")
+  if not package_path then
+    vim.notify("Could not infer package - file not under src/main/java", vim.log.levels.WARN)
+    return
+  end
+  local package_name = package_path:gsub("/", ".")
+  vim.api.nvim_buf_set_lines(0, 0, 0, false, { "package " .. package_name .. ";", "" })
+end
+
+vim.api.nvim_create_user_command("JavaInsertPackage", insert_java_package, {})
+
+-- Increases visibility of highlight in certain colorschemes
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    vim.api.nvim_set_hl(0, "MiniPickMatchCurrent", { bg = "#3b4252", fg = "#ffffff", bold = true })
+  end,
+})

@@ -1,0 +1,37 @@
+# Ghostty theme: "VSCode Dark (nvim)"
+# Derived directly from Mofiqul/vscode.nvim's lua/vscode/colors.lua (dark palette)
+# Source values copied verbatim from the plugin's get_colors() dark branch.
+
+background = 1F1F1F
+foreground = D4D4D4
+
+cursor-color = AEAFAD
+cursor-text = 222222
+
+selection-background = 264F78
+selection-foreground = D4D4D4
+
+# ANSI 16-color palette
+# Mapped from vscode.nvim's syntax-highlight colors to the closest
+# semantic equivalent (matches VSCode's own integrated terminal convention,
+# since that's what this plugin is imitating).
+
+# Normal (0-7)
+palette = 0=#1F1F1F
+palette = 1=#F44747
+palette = 2=#6A9955
+palette = 3=#DCDCAA
+palette = 4=#569CD6
+palette = 5=#C586C0
+palette = 6=#4EC9B0
+palette = 7=#D4D4D4
+
+# Bright (8-15)
+palette = 8=#5A5A5A
+palette = 9=#D16969
+palette = 10=#B5CEA8
+palette = 11=#FFD602
+palette = 12=#4FC1FF
+palette = 13=#C586C0
+palette = 14=#9CDCFE
+palette = 15=#FFFFFF

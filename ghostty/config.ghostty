@@ -1,8 +1,8 @@
-theme = TokyoNight
-font-family = CommitMono-w1cache
+theme = vscode
+# font-family = CommitMono-w1cache
 fullscreen = true
 font-size = 13
-adjust-cell-height = 50%
+adjust-cell-height = 35%
 window-show-tab-bar = never
 # window-padding-x = 8
 # window-padding-y = 8
